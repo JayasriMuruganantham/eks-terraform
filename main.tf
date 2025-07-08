@@ -1,10 +1,10 @@
 terraform {
-  required_version = ">= 1.5"
+  required_version = ">= 1.5.0"
 
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.0"
+      version = "~> 5.34.0"
     }
   }
 }
@@ -42,13 +42,11 @@ module "eks" {
 
   eks_managed_node_groups = {
     app_nodes = {
-      desired_capacity = 2
-      max_capacity     = 2
-      min_capacity     = 1
-      instance_types   = ["t3.medium"]
-
-      # This disables GPU & inference settings to avoid the error
-      use_custom_launch_template = false
+      desired_capacity            = 2
+      max_capacity                = 2
+      min_capacity                = 1
+      instance_types              = ["t3.medium"]
+      use_custom_launch_template = false  # ✅ This disables dynamic GPU block
     }
   }
 }

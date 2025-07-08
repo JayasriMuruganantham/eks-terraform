@@ -46,7 +46,9 @@ module "eks" {
       max_capacity                = 2
       min_capacity                = 1
       instance_types              = ["t3.medium"]
-      use_custom_launch_template = false  # ✅ This disables dynamic GPU block
+      use_custom_launch_template = false  # ✅ This disables the block causing errors
     }
   }
 }
+
+  

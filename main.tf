@@ -1,15 +1,35 @@
-ble_irsa = true
+terraform {
+  required_version = ">= 1.5"
 
-  eks_managed_node_groups = {
-    app_nodes = {
-      desired_capacity = 2
-      max_capacity     = 2
-      min_capacity     = 1
-      instance_types   = ["t3.medium"]
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 5.0"
     }
   }
 }
-erraform-aws-modules/eks/aws"
+
+provider "aws" {
+  region = var.region
+}
+
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.1.0"
+
+  name = "eks-vpc"
+  cidr = "10.0.0.0/16"
+  azs  = ["us-east-1a", "us-east-1b"]
+
+  public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
+  private_subnets = ["10.0.11.0/24", "10.0.12.0/24"]
+
+  enable_nat_gateway = true
+  single_nat_gateway = true
+}
+
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
   version = "20.8.4"
 
   cluster_name    = "demo-java-cluster"
@@ -26,6 +46,9 @@ erraform-aws-modules/eks/aws"
       max_capacity     = 2
       min_capacity     = 1
       instance_types   = ["t3.medium"]
+
+      # This disables GPU & inference settings to avoid the error
+      use_custom_launch_template = false
     }
   }
 }

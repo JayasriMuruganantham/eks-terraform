@@ -30,25 +30,23 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "18.31.2"
+  version = "18.31.2"  # Stable version
 
   cluster_name    = "demo-java-cluster"
   cluster_version = "1.28"
 
-  subnet_ids = module.vpc.private_subnets
-  vpc_id     = module.vpc.vpc_id
+  subnets = module.vpc.private_subnets
+  vpc_id  = module.vpc.vpc_id
 
   enable_irsa = true
 
-  eks_managed_node_groups = {
-    app_nodes = {
-      desired_capacity            = 2
-      max_capacity                = 2
-      min_capacity                = 1
-      instance_types              = ["t3.medium"]
-      use_custom_launch_template = false  # ✅ This disables the block causing errors
+  worker_groups = [
+    {
+      name                 = "app-nodes"
+      instance_type        = "t3.medium"
+      asg_desired_capacity = 2
+      asg_min_size         = 1
+      asg_max_size         = 2
     }
-  }
+  ]
 }
-
-  

@@ -1,10 +1,10 @@
 terraform {
-  required_version = ">= 1.5.0"
+  required_version = ">= 1.5"
 
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.34.0"
+      version = ">= 5.0"
     }
   }
 }
@@ -30,10 +30,10 @@ module "vpc" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 20.0"  # Stable version
+  version = "18.31.2"
 
   cluster_name    = "demo-java-cluster"
-  cluster_version = "1.29"
+  cluster_version = "1.28"
 
   subnets = module.vpc.private_subnets
   vpc_id  = module.vpc.vpc_id
